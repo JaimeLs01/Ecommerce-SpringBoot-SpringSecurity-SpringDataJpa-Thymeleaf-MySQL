@@ -1,0 +1,9 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:src": {},
+        "th:href": {
+            "context": "link"
+        }
+    }
+}

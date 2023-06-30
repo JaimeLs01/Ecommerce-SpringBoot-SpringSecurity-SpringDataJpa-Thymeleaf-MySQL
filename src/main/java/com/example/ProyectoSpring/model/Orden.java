@@ -4,24 +4,44 @@
  */
 package com.example.ProyectoSpring.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.Date;
 
 /**
  *
  * @author User
  */
+@Entity
+@Table(name="ordenes")
 public class Orden {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String numero;
     private Date fechaCreacion,fechaRecibida;
+    @ManyToOne
+    private Usuario usuario;
 
-    public Orden(Integer id, String numero, Date fechaCreacion, Date fechaRecibida) {
+    @OneToOne(mappedBy = "orden")
+    private DetalleOrden detalle;
+
+    public Orden(Integer id, String numero, Date fechaCreacion, Date fechaRecibida, Usuario usuario, DetalleOrden detalle) {
         this.id = id;
         this.numero = numero;
         this.fechaCreacion = fechaCreacion;
         this.fechaRecibida = fechaRecibida;
+        this.usuario = usuario;
+        this.detalle = detalle;
     }
 
+    
     public Orden() {
     }
 
@@ -55,6 +75,22 @@ public class Orden {
 
     public void setFechaRecibida(Date fechaRecibida) {
         this.fechaRecibida = fechaRecibida;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public DetalleOrden getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(DetalleOrden detalle) {
+        this.detalle = detalle;
     }
 
     @Override
