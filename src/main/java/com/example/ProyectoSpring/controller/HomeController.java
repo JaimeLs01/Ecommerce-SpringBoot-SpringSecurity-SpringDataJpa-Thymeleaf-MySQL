@@ -7,7 +7,9 @@ package com.example.ProyectoSpring.controller;
 import com.example.ProyectoSpring.model.DetalleOrden;
 import com.example.ProyectoSpring.model.Orden;
 import com.example.ProyectoSpring.model.Producto;
+import com.example.ProyectoSpring.model.Usuario;
 import com.example.ProyectoSpring.service.ProductoService;
+import com.example.ProyectoSpring.service.UsuarioService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,8 @@ public class HomeController {
 
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private UsuarioService usuarioService; 
 
     List<DetalleOrden> detalles = new ArrayList<>();
     Orden orden = new Orden();
@@ -102,5 +106,15 @@ public class HomeController {
         model.addAttribute("detalles", detalles);
         model.addAttribute("total", orden.getTotal());
         return "usuario/carrito";
+    }
+    
+    @GetMapping("/resumenOrden")
+    public String detalle(Model model){
+        Optional<Usuario> usuario = usuarioService.findById(2);
+        Usuario us = usuario.get();
+        model.addAttribute("detalles", detalles);
+        model.addAttribute("total", orden.getTotal());
+        model.addAttribute("usuario", us);
+        return "usuario/resumenorden";
     }
 }
