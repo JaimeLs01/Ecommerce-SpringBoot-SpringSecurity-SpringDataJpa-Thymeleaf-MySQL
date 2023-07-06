@@ -59,11 +59,25 @@ public class HomeController {
         detalleOrden.setTotal(cantidad*producto.getPrecio());
         detalleOrden.setProducto(producto);
         detalles.add(detalleOrden);
+        orden.setTotal(ObtenerTotal());
+        return "redirect:/cart";
+    }
+    @GetMapping("/deleteCart/{id}")
+    public String deleteCart(@PathVariable Integer id){
+        for(int i=0;i<detalles.size();i++){
+            if(detalles.get(i).getProducto().getId().equals(id)){
+                detalles.remove(i);
+            }
+        }
+        orden.setTotal(ObtenerTotal());
+        return "redirect:/cart";
+    }
+    double ObtenerTotal(){
+        double sumaTotal = 0;
         for(int i =0;i<detalles.size();i++){
             sumaTotal+=detalles.get(i).getTotal();
         }
-        orden.setTotal(sumaTotal);
-        return "redirect:/cart";
+        return sumaTotal;
     }
     @GetMapping("/cart")
     public String cart(Model model){
