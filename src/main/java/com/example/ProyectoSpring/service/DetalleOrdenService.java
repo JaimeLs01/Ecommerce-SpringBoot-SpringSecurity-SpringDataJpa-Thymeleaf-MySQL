@@ -5,7 +5,6 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.DetalleOrden;
-
 /**
  *
  * @author User

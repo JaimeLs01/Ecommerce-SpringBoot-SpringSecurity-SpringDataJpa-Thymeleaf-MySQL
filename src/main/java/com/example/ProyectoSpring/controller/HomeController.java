@@ -8,9 +8,12 @@ import com.example.ProyectoSpring.model.DetalleOrden;
 import com.example.ProyectoSpring.model.Orden;
 import com.example.ProyectoSpring.model.Producto;
 import com.example.ProyectoSpring.model.Usuario;
+import com.example.ProyectoSpring.service.DetalleOrdenService;
+import com.example.ProyectoSpring.service.OrdenService;
 import com.example.ProyectoSpring.service.ProductoService;
 import com.example.ProyectoSpring.service.UsuarioService;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,11 @@ public class HomeController {
     @Autowired
     private ProductoService productoService;
     @Autowired
-    private UsuarioService usuarioService; 
+    private UsuarioService usuarioService;
+    @Autowired
+    private OrdenService ordenService;
+    @Autowired
+    private DetalleOrdenService detalleService;
 
     List<DetalleOrden> detalles = new ArrayList<>();
     Orden orden = new Orden();
@@ -101,15 +108,33 @@ public class HomeController {
         return posicion;
     }
 
+    @GetMapping("/generarOrden")
+    public String generarOrden() {
+        Date fechaCreacio = new Date();
+        Optional<Usuario> usuario = usuarioService.findById(2);
+        Usuario us = usuario.get();
+        orden.setFechaCreacion(fechaCreacio);
+        orden.setNumero(ordenService.generarNumeroOrden());
+        orden.setUsuario(us);
+        ordenService.save(orden);
+        for (int i = 0; i < detalles.size(); i++) {
+            detalles.get(i).setOrden(orden);
+            detalleService.save(detalles.get(i));
+        }
+        orden = new Orden();
+        detalles.clear();
+        return "redirect:/";
+    }
+
     @GetMapping("/cart")
     public String cart(Model model) {
         model.addAttribute("detalles", detalles);
         model.addAttribute("total", orden.getTotal());
         return "usuario/carrito";
     }
-    
+
     @GetMapping("/resumenOrden")
-    public String detalle(Model model){
+    public String detalle(Model model) {
         Optional<Usuario> usuario = usuarioService.findById(2);
         Usuario us = usuario.get();
         model.addAttribute("detalles", detalles);

@@ -9,7 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 
 /**
  *
@@ -26,8 +28,10 @@ public class Producto {
     private int cantidad;
     @ManyToOne
     private Usuario usuario;
+    @OneToMany(mappedBy = "producto")
+    private List<DetalleOrden> detallesOrden;
 
-    public Producto(Integer id, String nombre, String descripcion, String imagen, double precio, int cantidad, Usuario usuario) {
+    public Producto(Integer id, String nombre, String descripcion, String imagen, double precio, int cantidad, Usuario usuario, List<DetalleOrden> detallesOrden) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -35,7 +39,10 @@ public class Producto {
         this.precio = precio;
         this.cantidad = cantidad;
         this.usuario = usuario;
+        this.detallesOrden = detallesOrden;
     }
+
+    
     
     public Producto() {
     }
@@ -95,7 +102,14 @@ public class Producto {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
+
+    public List<DetalleOrden> getDetallesOrden() {
+        return detallesOrden;
+    }
+
+    public void setDetallesOrden(List<DetalleOrden> detallesOrden) {
+        this.detallesOrden = detallesOrden;
+    }
 
     @Override
     public String toString() {

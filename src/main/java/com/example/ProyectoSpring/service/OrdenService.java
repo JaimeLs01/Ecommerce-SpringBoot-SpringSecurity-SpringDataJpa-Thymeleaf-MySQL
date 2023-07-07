@@ -5,11 +5,14 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.Orden;
+import java.util.List;
 
 /**
  *
  * @author User
  */
 public interface OrdenService {
+    public List<Orden> findAll();
     public void save(Orden orden);
+    public String generarNumeroOrden();
 }
