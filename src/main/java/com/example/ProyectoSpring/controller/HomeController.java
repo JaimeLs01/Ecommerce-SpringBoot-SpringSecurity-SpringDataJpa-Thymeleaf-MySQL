@@ -142,4 +142,17 @@ public class HomeController {
         model.addAttribute("usuario", us);
         return "usuario/resumenorden";
     }
+    @PostMapping("/search")
+    public String search(@RequestParam("nombre") String nombre,Model model){
+        List<Producto> productos = productoService.findAll();
+        List<Producto> producto = new ArrayList<>();
+        productos.stream().filter( p -> p.getNombre().contains(nombre));
+        for(int i=0;i<productos.size();i++){
+            if(productos.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())){
+                producto.add(productos.get(i));
+            }
+        }
+        model.addAttribute("productos", producto);
+        return "usuario/home";
+    }
 }

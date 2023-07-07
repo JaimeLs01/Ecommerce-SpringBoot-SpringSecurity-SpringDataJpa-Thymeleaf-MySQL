@@ -68,7 +68,7 @@ public class ProductoController {
     
     @PostMapping("/save")
     public String save(Producto producto,@RequestParam("img") MultipartFile file) throws IOException{
-        Usuario usuario = new Usuario(1,"","","","","","","");
+        Usuario usuario = new Usuario(2,"","","","","","","");
         producto.setUsuario(usuario);
         if(producto.getId()==null){
             String nombreImagen = upload.saveImage(file);
