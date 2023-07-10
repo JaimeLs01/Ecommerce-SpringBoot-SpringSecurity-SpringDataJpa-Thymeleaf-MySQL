@@ -12,6 +12,7 @@ import com.example.ProyectoSpring.service.DetalleOrdenService;
 import com.example.ProyectoSpring.service.OrdenService;
 import com.example.ProyectoSpring.service.ProductoService;
 import com.example.ProyectoSpring.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public class HomeController {
     Orden orden = new Orden();
 
     @GetMapping("")
-    public String home(Model model) {
+    public String home(Model model,HttpSession session) {
         List<Producto> productos = productoService.findAll();
         model.addAttribute("productos", productos);
         return "usuario/home";
@@ -109,9 +110,9 @@ public class HomeController {
     }
 
     @GetMapping("/generarOrden")
-    public String generarOrden() {
+    public String generarOrden(HttpSession session) {
         Date fechaCreacio = new Date();
-        Optional<Usuario> usuario = usuarioService.findById(2);
+        Optional<Usuario> usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()));
         Usuario us = usuario.get();
         orden.setFechaCreacion(fechaCreacio);
         orden.setNumero(ordenService.generarNumeroOrden());
@@ -134,8 +135,8 @@ public class HomeController {
     }
 
     @GetMapping("/resumenOrden")
-    public String detalle(Model model) {
-        Optional<Usuario> usuario = usuarioService.findById(2);
+    public String detalle(Model model,HttpSession session) {
+        Optional<Usuario> usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()));
         Usuario us = usuario.get();
         model.addAttribute("detalles", detalles);
         model.addAttribute("total", orden.getTotal());

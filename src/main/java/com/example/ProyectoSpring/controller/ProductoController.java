@@ -8,6 +8,8 @@ import com.example.ProyectoSpring.model.Producto;
 import com.example.ProyectoSpring.model.Usuario;
 import com.example.ProyectoSpring.service.ProductoService;
 import com.example.ProyectoSpring.service.UploadFileService;
+import com.example.ProyectoSpring.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -33,6 +35,9 @@ public class ProductoController {
     
     @Autowired
     private UploadFileService upload;
+    
+    @Autowired
+    private UsuarioService usuarioService;
     
     @GetMapping("")
     public String show(Model model){
@@ -67,8 +72,8 @@ public class ProductoController {
     }
     
     @PostMapping("/save")
-    public String save(Producto producto,@RequestParam("img") MultipartFile file) throws IOException{
-        Usuario usuario = new Usuario(2,"","","","","","","");
+    public String save(Producto producto,@RequestParam("img") MultipartFile file,HttpSession session) throws IOException{
+        Usuario usuario = usuarioService.findById((Integer.parseInt(session.getAttribute("idusuario").toString()))).get();
         producto.setUsuario(usuario);
         if(producto.getId()==null){
             String nombreImagen = upload.saveImage(file);
