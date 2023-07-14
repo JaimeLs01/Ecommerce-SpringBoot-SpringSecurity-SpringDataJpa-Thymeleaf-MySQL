@@ -5,11 +5,13 @@
 package com.example.ProyectoSpring.controller;
 
 import com.example.ProyectoSpring.model.Usuario;
+import com.example.ProyectoSpring.service.OrdenService;
 import com.example.ProyectoSpring.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,9 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
+    
+    @Autowired
+    OrdenService ordenService;
 
     @GetMapping("/registro")
     public String registro() {
@@ -55,5 +60,12 @@ public class UsuarioController {
         }
 
         return "redirect:/usuario/login";
+    }
+    @GetMapping("/compras")
+    public String compras(Model model,HttpSession sesion){
+        model.addAttribute("sesion", sesion.getAttribute("idusuario"));
+        Usuario usuario = usuarioService.findById(Integer.parseInt(sesion.getAttribute("idusuario").toString())).get();
+        model.addAttribute("compras", ordenService.findByUsuario(usuario));
+        return "usuario/compras";
     }
 }

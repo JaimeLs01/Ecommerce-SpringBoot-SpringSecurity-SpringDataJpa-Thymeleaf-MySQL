@@ -5,6 +5,7 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.Orden;
+import com.example.ProyectoSpring.model.Usuario;
 import java.util.List;
 
 /**
@@ -15,4 +16,5 @@ public interface OrdenService {
     public List<Orden> findAll();
     public void save(Orden orden);
     public String generarNumeroOrden();
+    List<Orden> findByUsuario(Usuario usuario);
 }

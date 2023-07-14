@@ -5,6 +5,7 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.Orden;
+import com.example.ProyectoSpring.model.Usuario;
 import com.example.ProyectoSpring.repository.OrdenRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,10 @@ public class OrdenServiceImpl implements OrdenService{
         }
         ultimo=String.format("%08d", numero);
         return ultimo;
+    }
+
+    @Override
+    public List<Orden> findByUsuario(Usuario usuario) {
+        return ordenRepository.findByUsuario(usuario);
     }
 }

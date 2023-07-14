@@ -47,9 +47,10 @@ public class HomeController {
     Orden orden = new Orden();
 
     @GetMapping("")
-    public String home(Model model,HttpSession session) {
+    public String home(Model model, HttpSession session) {
         List<Producto> productos = productoService.findAll();
         model.addAttribute("productos", productos);
+        model.addAttribute("sesion", session.getAttribute("idusuario"));
         return "usuario/home";
     }
 

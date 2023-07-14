@@ -71,7 +71,7 @@ public class ProductoController {
         return "redirect:/productos";
     }
     
-    @PostMapping("/save")
+    @PostMapping("/save")//test
     public String save(Producto producto,@RequestParam("img") MultipartFile file,HttpSession session) throws IOException{
         Usuario usuario = usuarioService.findById((Integer.parseInt(session.getAttribute("idusuario").toString()))).get();
         producto.setUsuario(usuario);
@@ -84,7 +84,7 @@ public class ProductoController {
         return "redirect:/productos";
     }
     
-    @PostMapping("/update")
+    @PostMapping("/update")//test
     public String update(Producto producto,@RequestParam("img") MultipartFile file) throws IOException{
         Producto p;
         p=productoService.get(producto.getId()).get();
