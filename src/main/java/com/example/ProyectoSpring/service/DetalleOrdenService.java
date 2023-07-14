@@ -5,10 +5,13 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.DetalleOrden;
+import com.example.ProyectoSpring.model.Orden;
+import java.util.List;
 /**
  *
  * @author User
  */
 public interface DetalleOrdenService {
     public void save(DetalleOrden detalleOrden);
+    List<DetalleOrden> findByOrden(Orden orden);
 }

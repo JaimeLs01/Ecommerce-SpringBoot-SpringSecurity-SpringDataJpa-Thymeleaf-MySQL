@@ -4,7 +4,9 @@
  */
 package com.example.ProyectoSpring.controller;
 
+import com.example.ProyectoSpring.model.Orden;
 import com.example.ProyectoSpring.model.Usuario;
+import com.example.ProyectoSpring.service.DetalleOrdenService;
 import com.example.ProyectoSpring.service.OrdenService;
 import com.example.ProyectoSpring.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,6 +32,9 @@ public class UsuarioController {
     
     @Autowired
     OrdenService ordenService;
+    
+    @Autowired
+    DetalleOrdenService detalleService;
 
     @GetMapping("/registro")
     public String registro() {
@@ -67,5 +73,13 @@ public class UsuarioController {
         Usuario usuario = usuarioService.findById(Integer.parseInt(sesion.getAttribute("idusuario").toString())).get();
         model.addAttribute("compras", ordenService.findByUsuario(usuario));
         return "usuario/compras";
+    }
+    @GetMapping("/detalles/{id}")
+    public String detalles(HttpSession sesion,Model model,@PathVariable Integer id){
+        Orden orden= ordenService.findById(id).get();
+        detalleService.findByOrden(orden);
+        model.addAttribute("sesion",sesion.getAttribute("idusuario"));
+        model.addAttribute("detalles", detalleService.findByOrden(orden));
+        return "usuario/detallecompra";
     }
 }

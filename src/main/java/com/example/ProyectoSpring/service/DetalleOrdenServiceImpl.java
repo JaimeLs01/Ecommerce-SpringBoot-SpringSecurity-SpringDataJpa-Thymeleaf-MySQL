@@ -5,7 +5,9 @@
 package com.example.ProyectoSpring.service;
 
 import com.example.ProyectoSpring.model.DetalleOrden;
+import com.example.ProyectoSpring.model.Orden;
 import com.example.ProyectoSpring.repository.DetalleOrdenRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,10 @@ public class DetalleOrdenServiceImpl implements DetalleOrdenService{
     @Override
     public void save(DetalleOrden detalleOrden){
         detalleOrdenRepository.save(detalleOrden);
+    }
+
+    @Override
+    public List<DetalleOrden> findByOrden(Orden orden) {
+        return detalleOrdenRepository.findByOrden(orden);
     }
 }
