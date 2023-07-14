@@ -24,4 +24,9 @@ public class DetalleOrdenServiceImpl implements DetalleOrdenService{
     public List<DetalleOrden> findByOrden(Orden orden) {
         return detalleOrdenRepository.findByOrden(orden);
     }
+
+    @Override
+    public List<DetalleOrden> finByAll() {
+        return detalleOrdenRepository.findAll();
+    }
 }

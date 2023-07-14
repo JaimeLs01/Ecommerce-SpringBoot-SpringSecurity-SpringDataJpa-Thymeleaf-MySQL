@@ -14,4 +14,5 @@ import java.util.List;
 public interface DetalleOrdenService {
     public void save(DetalleOrden detalleOrden);
     List<DetalleOrden> findByOrden(Orden orden);
+    List<DetalleOrden> finByAll();
 }
