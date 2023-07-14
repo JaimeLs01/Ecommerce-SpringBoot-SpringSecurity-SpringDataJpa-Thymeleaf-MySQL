@@ -82,4 +82,9 @@ public class UsuarioController {
         model.addAttribute("detalles", detalleService.findByOrden(orden));
         return "usuario/detallecompra";
     }
+    @GetMapping("/logout")
+    public String logout(HttpSession sesion){
+        sesion.removeAttribute("idusuario");
+        return "redirect:/";
+    }
 }
