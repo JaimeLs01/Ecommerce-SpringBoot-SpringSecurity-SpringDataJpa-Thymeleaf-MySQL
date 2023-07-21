@@ -11,7 +11,9 @@ import com.example.ProyectoSpring.service.OrdenService;
 import com.example.ProyectoSpring.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +38,14 @@ public class UsuarioController {
     @Autowired
     DetalleOrdenService detalleService;
 
+    @Autowired
+    BCryptPasswordEncoder bCrypt;
+    
+    
+    private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     @GetMapping("/registro")
     public String registro() {
+        System.out.println("Hola, este es un mensaje de salida del sistema.");
         return "usuario/registro";
     }
 
@@ -49,15 +57,18 @@ public class UsuarioController {
     @PostMapping("/save")
     public String save(Usuario usuario) {
         usuario.setTipo("USER");
+        usuario.setPassword(bCrypt.encode(usuario.getPassword()));
         usuarioService.save(usuario);
         return "redirect:/";
     }
 
-    @PostMapping("/acceder")
+    @GetMapping("/acceder")
     public String acceder(Usuario usuario,HttpSession session) {
-        Optional<Usuario> user = usuarioService.findByEmail(usuario.getEmail());
+        Optional<Usuario> user = usuarioService.findByEmail(session.getAttribute("correo").toString());
+        LOGGER.info("Tipo: {}", usuario.getUsername());
         if (user.isPresent()) {
             session.setAttribute("idusuario", user.get().getId());
+            LOGGER.info("Tipo: {}", user.get().getTipo());
             if (user.get().getTipo().equals("ADMIN")) {
                 return "redirect:/administrador";
             } else {
@@ -84,7 +95,6 @@ public class UsuarioController {
     }
     @GetMapping("/logout")
     public String logout(HttpSession sesion){
-        sesion.removeAttribute("idusuario");
         return "redirect:/";
     }
 }

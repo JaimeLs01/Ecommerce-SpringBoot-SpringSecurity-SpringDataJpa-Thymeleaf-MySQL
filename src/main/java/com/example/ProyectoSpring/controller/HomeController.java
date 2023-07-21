@@ -55,9 +55,10 @@ public class HomeController {
     }
 
     @GetMapping("/productohome/{id}")
-    public String productoHome(@PathVariable Integer id, Model model) {
+    public String productoHome(@PathVariable Integer id, Model model, HttpSession session) {
         Producto producto;
         Optional<Producto> optionalProducto = productoService.get(id);
+        model.addAttribute("sesion", session.getAttribute("idusuario"));
         producto = optionalProducto.get();
         model.addAttribute("producto", producto);
         return "usuario/productohome";
@@ -136,7 +137,7 @@ public class HomeController {
     }
 
     @GetMapping("/resumenOrden")
-    public String detalle(Model model,HttpSession session) {
+    public String detalle(Model model, HttpSession session) {
         Optional<Usuario> usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()));
         Usuario us = usuario.get();
         model.addAttribute("detalles", detalles);
@@ -144,17 +145,27 @@ public class HomeController {
         model.addAttribute("usuario", us);
         return "usuario/resumenorden";
     }
+
     @PostMapping("/search")
-    public String search(@RequestParam("nombre") String nombre,Model model){
+    public String search(@RequestParam("nombre") String nombre, Model model, HttpSession session) {
         List<Producto> productos = productoService.findAll();
         List<Producto> producto = new ArrayList<>();
-        productos.stream().filter( p -> p.getNombre().contains(nombre));
-        for(int i=0;i<productos.size();i++){
-            if(productos.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())){
+        productos.stream().filter(p -> p.getNombre().contains(nombre));
+        for (int i = 0; i < productos.size(); i++) {
+            if (productos.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())) {
                 producto.add(productos.get(i));
             }
         }
+        model.addAttribute("sesion", session.getAttribute("idusuario"));
         model.addAttribute("productos", producto);
         return "usuario/home";
+    }
+
+    @GetMapping("/cerrar")
+    public String cerrar(HttpSession sesion) {
+        sesion.removeAttribute("idusuario");
+        orden = new Orden();
+        detalles.clear();
+        return "redirect:/";
     }
 }
