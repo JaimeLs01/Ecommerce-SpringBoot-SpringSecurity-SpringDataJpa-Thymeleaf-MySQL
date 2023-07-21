@@ -31,18 +31,18 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
-    
+
     @Autowired
     OrdenService ordenService;
-    
+
     @Autowired
     DetalleOrdenService detalleService;
 
     @Autowired
     BCryptPasswordEncoder bCrypt;
-    
-    
+
     private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
+
     @GetMapping("/registro")
     public String registro() {
         System.out.println("Hola, este es un mensaje de salida del sistema.");
@@ -63,7 +63,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/acceder")
-    public String acceder(Usuario usuario,HttpSession session) {
+    public String acceder(Usuario usuario, HttpSession session) {
         Optional<Usuario> user = usuarioService.findByEmail(session.getAttribute("correo").toString());
         LOGGER.info("Tipo: {}", usuario.getUsername());
         if (user.isPresent()) {
@@ -78,23 +78,31 @@ public class UsuarioController {
 
         return "redirect:/usuario/login";
     }
+
     @GetMapping("/compras")
-    public String compras(Model model,HttpSession sesion){
+    public String compras(Model model, HttpSession sesion) {
         model.addAttribute("sesion", sesion.getAttribute("idusuario"));
         Usuario usuario = usuarioService.findById(Integer.parseInt(sesion.getAttribute("idusuario").toString())).get();
         model.addAttribute("compras", ordenService.findByUsuario(usuario));
         return "usuario/compras";
     }
+
     @GetMapping("/detalles/{id}")
-    public String detalles(HttpSession sesion,Model model,@PathVariable Integer id){
-        Orden orden= ordenService.findById(id).get();
-        detalleService.findByOrden(orden);
-        model.addAttribute("sesion",sesion.getAttribute("idusuario"));
-        model.addAttribute("detalles", detalleService.findByOrden(orden));
-        return "usuario/detallecompra";
+    public String detalles(HttpSession sesion, Model model, @PathVariable Integer id) {
+        Integer idUsuario = Integer.parseInt(sesion.getAttribute("idusuario").toString());
+        Orden orden = ordenService.findById(id).get();
+        if (orden.getUsuario().getId().equals(idUsuario)) {
+            detalleService.findByOrden(orden);
+            model.addAttribute("sesion", sesion.getAttribute("idusuario"));
+            model.addAttribute("detalles", detalleService.findByOrden(orden));
+            return "usuario/detallecompra";
+        }else{
+            return "redirect:/usuario/compras";
+        }
     }
+
     @GetMapping("/logout")
-    public String logout(HttpSession sesion){
+    public String logout(HttpSession sesion) {
         return "redirect:/";
     }
 }
